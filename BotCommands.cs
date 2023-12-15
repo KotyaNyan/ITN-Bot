@@ -1,5 +1,4 @@
 ﻿using Dadata;
-using System.Linq;
 namespace TelegramBot
 {
     public class BotCommands
