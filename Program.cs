@@ -67,7 +67,6 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
     var recievedMessage = message.Text.Split(" ");
 
     string replyMessage = "";
-
     switch (recievedMessage[0])
     {
         case "/start":
@@ -118,8 +117,11 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
             break;
     }
 
-    //Console.WriteLine($"Полученно сообщение '{messageText}' в чате {chatId}.");
-
+    Console.WriteLine($"Полученно сообщение '{messageText}' в чате {chatId}.");
+    if(replyMessage.Length>4096)
+    {
+        replyMessage = "Слишком большой запрос, пожалукйста уменьшите количество информации в вашем запросе";
+    }
     //Если почему-то сообщение ответ пустое, то не оно отправляется
     if (!replyMessage.Equals(""))
     {
@@ -132,13 +134,13 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
 
 Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
 {
-    var ErrorMessage = exception switch
-    {
-        ApiRequestException apiRequestException
-            => $"Ошибка Telegram Api::\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-        _ => exception.ToString()
-    }; ;
+        var ErrorMessage = exception switch
+        {
+            ApiRequestException apiRequestException
+                => $"Ошибка Telegram Api::\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+            _ => exception.ToString()
+        }; ;
 
-    Console.WriteLine(ErrorMessage);
+        Console.WriteLine(ErrorMessage);
     return Task.CompletedTask;
 }
